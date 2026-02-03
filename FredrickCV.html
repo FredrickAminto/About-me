@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fredrick BV Aminto | AI & Data Science Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        primary: '#00d9ff',
+                        secondary: '#7000ff',
+                        accent: '#ff006e',
+                        dark: '#0a0a0f',
+                        darker: '#050508',
+                        surface: '#151520',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'gradient': 'gradient 8s ease infinite',
+                        'typing': 'typing 3.5s steps(40, end)',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        gradient: {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0a0f;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        
+        .glass {
+            background: rgba(21, 21, 32, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glow {
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+        }
+        
+        .text-glow {
+            text-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #00d9ff, #7000ff, #ff006e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradient 8s ease infinite;
+        }
+        
+        .skill-bar {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .skill-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, #00d9ff, #7000ff);
+            transition: width 1.5s ease-out;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 217, 255, 0.2);
+            border-color: rgba(0, 217, 255, 0.5);
+        }
+        
+        .timeline-line {
+            background: linear-gradient(to bottom, #00d9ff, #7000ff, transparent);
+        }
+        
+        .particle {
+            position: absolute;
+            background: #00d9ff;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 10s infinite;
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: #00d9ff;
+            transition: width 0.3s;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .cursor-glow {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00d9ff;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+        }
+        
+        @media (max-width: 768px) {
+            .cursor-glow {
+                display: none;
+            }
+        }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Custom Cursor -->
+    <div class="cursor-glow hidden md:block" id="cursor"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0 font-bold text-2xl gradient-text cursor-pointer" onclick="window.scrollTo(0,0)">
+                    Fredrick BV Aminto
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="#about" class="nav-link text-gray-300 hover:text-primary transition-colors">About</a>
+                    <a href="#skills" class="nav-link text-gray-300 hover:text-primary transition-colors">Skills</a>
+                    <a href="#projects" class="nav-link text-gray-300 hover:text-primary transition-colors">Projects</a>
+                    <a href="#experience" class="nav-link text-gray-300 hover:text-primary transition-colors">Experience</a>
+                    <a href="#contact" class="px-4 py-2 rounded-full bg-primary/10 border border-primary text-primary hover:bg-primary hover:text-dark transition-all">Contact</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-primary">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden glass border-t border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#about" class="block px-3 py-2 text-gray-300 hover:text-primary">About</a>
+                <a href="#skills" class="block px-3 py-2 text-gray-300 hover:text-primary">Skills</a>
+                <a href="#projects" class="block px-3 py-2 text-gray-300 hover:text-primary">Projects</a>
+                <a href="#experience" class="block px-3 py-2 text-gray-300 hover:text-primary">Experience</a>
+                <a href="#contact" class="block px-3 py-2 text-primary">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Canvas Animation -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+        <canvas id="hero-canvas" class="absolute inset-0 w-full h-full"></canvas>
+        
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="reveal">
+                <p class="text-primary font-mono mb-4 tracking-widest uppercase text-sm">AI & Data Science Undergraduate</p>
+                <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                    Hi, I'm <span class="gradient-text">Fredrick BV Aminto</span><br>
+                    <span class="text-2xl md:text-4xl font-light text-gray-400" id="typing-text"></span>
+                </h1>
+                <p class="max-w-2xl mx-auto text-gray-400 text-lg mb-8 leading-relaxed">
+                    Transforming raw data into actionable insights. Passionate about Python, Machine Learning, 
+                    and building IoT solutions that make a difference.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="#projects" class="px-8 py-4 rounded-full bg-primary text-dark font-semibold hover:shadow-[0_0_30px_rgba(0,217,255,0.5)] transition-all transform hover:scale-105">
+                        View My Work
+                    </a>
+                    <a href="#contact" class="px-8 py-4 rounded-full border border-primary text-primary hover:bg-primary/10 transition-all">
+                        Get In Touch
+                    </a>
+                </div>
+
+                <div class="mt-12 flex justify-center space-x-6">
+                    <a href="https://github.com" target="_blank" class="text-gray-400 hover:text-primary transition-colors text-2xl">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://linkedin.com" target="_blank" class="text-gray-400 hover:text-primary transition-colors text-2xl">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="mailto:fredrick@email.com" class="text-gray-400 hover:text-primary transition-colors text-2xl">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i class="fas fa-chevron-down text-primary text-2xl"></i>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="reveal">
+                    <div class="relative">
+                        <div class="absolute -inset-4 bg-gradient-to-r from-primary to-secondary rounded-2xl opacity-30 blur-lg"></div>
+                        <div class="relative glass rounded-2xl p-8 border border-gray-700">
+                            <div class="aspect-square rounded-xl overflow-hidden bg-surface flex items-center justify-center">
+                                <div class="text-center">
+                                    <i class="fas fa-user-graduate text-6xl text-primary mb-4"></i>
+                                    <p class="text-gray-400">PRIST University</p>
+                                    <p class="text-sm text-gray-500">B.Tech AI & Data Science</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6">
+                        About <span class="gradient-text">Me</span>
+                    </h2>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        I am an AI & Data Science undergraduate at PRIST University with a strong foundation in Python, 
+                        data analytics, and IoT technologies. My journey in tech started with a curiosity about how 
+                        data drives decisions, leading me to develop skills in Power BI, machine learning fundamentals, 
+                        and embedded systems.
+                    </p>
+                    <p class="text-gray-400 mb-8 leading-relaxed">
+                        Currently seeking beginner-level internship opportunities where I can apply my analytical thinking 
+                        and programming skills to real-world problems. I'm passionate about continuous learning and 
+                        contributing to team-driven environments.
+                    </p>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="glass p-4 rounded-lg border border-gray-700">
+                            <h3 class="text-primary font-bold text-2xl">2022</h3>
+                            <p class="text-gray-400 text-sm">Started B.Tech Journey</p>
+                        </div>
+                        <div class="glass p-4 rounded-lg border border-gray-700">
+                            <h3 class="text-primary font-bold text-2xl">100+</h3>
+                            <p class="text-gray-400 text-sm">Countries Analyzed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section with Interactive Visualization -->
+    <section id="skills" class="py-20 bg-surface/30 relative overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,217,255,0.1),transparent_70%)]"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Technical <span class="gradient-text">Skills</span></h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Technologies and tools I work with</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Technical Skills -->
+                <div class="glass rounded-2xl p-8 border border-gray-700 reveal">
+                    <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+                        <i class="fas fa-code text-primary"></i>
+                        Programming & Data
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div class="skill-item">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-300">Python</span>
+                                <span class="text-primary">85%</span>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-primary to-secondary h-2 rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-300">Data Analysis</span>
+                                <span class="text-primary">80%</span>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-primary to-secondary h-2 rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-300">Power BI</span>
+                                <span class="text-primary">75%</span>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-primary to-secondary h-2 rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-300">MS Excel</span>
+                                <span class="text-primary">90%</span>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-primary to-secondary h-2 rounded-full" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-300">IoT/ESP8266</span>
+                                <span class="text-primary">70%</span>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-primary to-secondary h-2 rounded-full" style="width: 70%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills Tags -->
+                <div class="glass rounded-2xl p-8 border border-gray-700 reveal">
+                    <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+                        <i class="fas fa-brain text-secondary"></i>
+                        AI & Concepts
+                    </h3>
+                    
+                    <div class="flex flex-wrap gap-3">
+                        <span class="px-4 py-2 rounded-full bg-primary/10 border border-primary/30 text-primary hover:bg-primary/20 transition-all cursor-default">Machine Learning Basics</span>
+                        <span class="px-4 py-2 rounded-full bg-secondary/10 border border-secondary/30 text-secondary hover:bg-secondary/20 transition-all cursor-default">Deep Learning Fundamentals</span>
+                        <span class="px-4 py-2 rounded-full bg-accent/10 border border-accent/30 text-accent hover:bg-accent/20 transition-all cursor-default">Data Visualization</span>
+                        <span class="px-4 py-2 rounded-full bg-primary/10 border border-primary/30 text-primary hover:bg-primary/20 transition-all cursor-default">Git & GitHub</span>
+                        <span class="px-4 py-2 rounded-full bg-secondary/10 border border-secondary/30 text-secondary hover:bg-secondary/20 transition-all cursor-default">IoT Sensors</span>
+                        <span class="px-4 py-2 rounded-full bg-accent/10 border border-accent/30 text-accent hover:bg-accent/20 transition-all cursor-default">DAX</span>
+                        <span class="px-4 py-2 rounded-full bg-primary/10 border border-primary/30 text-primary hover:bg-primary/20 transition-all cursor-default">Data Modeling</span>
+                    </div>
+
+                    <h3 class="text-xl font-bold mt-8 mb-6 flex items-center gap-2">
+                        <i class="fas fa-users text-accent"></i>
+                        Soft Skills
+                    </h3>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="flex items-center gap-2 text-gray-300">
+                            <i class="fas fa-check-circle text-primary"></i>
+                            <span>Teamwork</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-gray-300">
+                            <i class="fas fa-check-circle text-primary"></i>
+                            <span>Leadership</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-gray-300">
+                            <i class="fas fa-check-circle text-primary"></i>
+                            <span>Communication</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-gray-300">
+                            <i class="fas fa-check-circle text-primary"></i>
+                            <span>Problem Solving</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Featured <span class="gradient-text">Projects</span></h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Real-world applications of my technical skills</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Project 1 -->
+                <div class="glass rounded-2xl overflow-hidden border border-gray-700 card-hover reveal group">
+                    <div class="h-48 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%2300d9ff%22%20fill-opacity%3D%220.1%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+                        <i class="fas fa-heartbeat text-6xl text-primary group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-white">Health Monitoring Wearable</h3>
+                            <span class="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs border border-primary/30">Healthcare</span>
+                        </div>
+                        <p class="text-gray-400 mb-4 text-sm leading-relaxed">
+                            Designed a proposed healthcare monitoring wearable using advanced pulse sensor technology. 
+                            Focused on continuous monitoring of vital signs such as heart rate for real-time health insights 
+                            using basic data analytics concepts.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="text-xs text-gray-500">#IoT</span>
+                            <span class="text-xs text-gray-500">#DataAnalytics</span>
+                            <span class="text-xs text-gray-500">#Healthcare</span>
+                        </div>
+                        <button class="text-primary hover:text-white transition-colors text-sm font-medium flex items-center gap-2 group">
+                            View Details <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="glass rounded-2xl overflow-hidden border border-gray-700 card-hover reveal group">
+                    <div class="h-48 bg-gradient-to-br from-secondary/20 to-accent/20 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%237000ff%22%20fill-opacity%3D%220.1%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+                        <i class="fas fa-industry text-6xl text-secondary group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-white">Industrial Safety Monitor</h3>
+                            <span class="px-3 py-1 rounded-full bg-secondary/10 text-secondary text-xs border border-secondary/30">IoT</span>
+                        </div>
+                        <p class="text-gray-400 mb-4 text-sm leading-relaxed">
+                            Developed an IoT-based safety monitoring system using MQ135 gas sensor and DHT11 temperature 
+                            & humidity sensor with NodeMCU (ESP8266). Transmitted real-time data to ThingSpeak with alert 
+                            mechanisms for unsafe conditions.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="text-xs text-gray-500">#ESP8266</span>
+                            <span class="text-xs text-gray-500">#ThingSpeak</span>
+                            <span class="text-xs text-gray-500">#Safety</span>
+                        </div>
+                        <button class="text-secondary hover:text-white transition-colors text-sm font-medium flex items-center gap-2 group">
+                            View Details <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="glass rounded-2xl overflow-hidden border border-gray-700 card-hover reveal group md:col-span-2">
+                    <div class="md:flex">
+                        <div class="md:w-1/3 h-48 md:h-auto bg-gradient-to-br from-accent/20 to-primary/20 flex items-center justify-center relative overflow-hidden">
+                            <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ff006e%22%20fill-opacity%3D%220.1%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+                            <i class="fas fa-chart-line text-6xl text-accent group-hover:scale-110 transition-transform"></i>
+                        </div>
+                        <div class="p-6 md:w-2/3">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-xl font-bold text-white">Global Suicide Rate Analysis</h3>
+                                <span class="px-3 py-1 rounded-full bg-accent/10 text-accent text-xs border border-accent/30">Power BI</span>
+                            </div>
+                            <p class="text-gray-400 mb-4 text-sm leading-relaxed">
+                                Built an interactive Power BI dashboard analyzing global suicide trends from 1985-2016 across 100+ countries. 
+                                Visualized data by age, gender, country, and GDP to identify high-risk groups and uncover key mental health patterns. 
+                                Applied data cleaning, modeling, DAX, and advanced visualization techniques.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs text-gray-500">#PowerBI</span>
+                                <span class="text-xs text-gray-500">#DataVisualization</span>
+                                <span class="text-xs text-gray-500">#DAX</span>
+                                <span class="text-xs text-gray-500">#DataCleaning</span>
+                            </div>
+                            <div class="flex gap-4 text-sm text-gray-400">
+                                <span class="flex items-center gap-1"><i class="fas fa-calendar text-accent"></i> Aug-Sep 2024</span>
+                                <span class="flex items-center gap-1"><i class="fas fa-globe text-accent"></i> 100+ Countries</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Timeline -->
+    <section id="experience" class="py-20 bg-surface/30 relative">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Education & <span class="gradient-text">Experience</span></h2>
+            </div>
+
+            <div class="relative">
+                <!-- Timeline Line -->
+                <div class="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 w-1 h-full timeline-line rounded-full"></div>
+
+                <!-- Education -->
+                <div class="relative mb-12 reveal">
+                    <div class="flex items-center justify-between md:justify-start md:flex-row-reverse group">
+                        <div class="w-full md:w-5/12 pl-12 md:pl-0 md:pr-12">
+                            <div class="glass p-6 rounded-xl border border-gray-700 hover:border-primary/50 transition-all">
+                                <span class="text-primary font-mono text-sm">2022 - Present</span>
+                                <h3 class="text-xl font-bold mt-2 mb-2">B.Tech AI & Data Science</h3>
+                                <p class="text-gray-400 text-sm mb-2">PRIST University, Thanjavur</p>
+                                <p class="text-gray-500 text-xs">Undergraduate program focusing on machine learning, data analytics, and artificial intelligence fundamentals.</p>
+                            </div>
+                        </div>
+                        <div class="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full bg-primary border-4 border-dark shadow-[0_0_20px_rgba(0,217,255,0.5)]"></div>
+                        <div class="w-full md:w-5/12 pl-12 md:pl-12 hidden md:block"></div>
+                    </div>
+                </div>
+
+                <!-- Internship -->
+                <div class="relative mb-12 reveal">
+                    <div class="flex items-center justify-between md:justify-start">
+                        <div class="w-full md:w-5/12 pl-12 md:pl-12 md:pr-0">
+                            <div class="glass p-6 rounded-xl border border-gray-700 hover:border-secondary/50 transition-all">
+                                <span class="text-secondary font-mono text-sm">Aug - Sep 2024</span>
+                                <h3 class="text-xl font-bold mt-2 mb-2">Data Analytics Intern</h3>
+                                <p class="text-gray-400 text-sm mb-2">Global Suicide Rate Analysis</p>
+                                <p class="text-gray-500 text-xs">Built interactive Power BI dashboard analyzing 30+ years of global mental health data across 100+ countries.</p>
+                            </div>
+                        </div>
+                        <div class="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full bg-secondary border-4 border-dark shadow-[0_0_20px_rgba(112,0,255,0.5)]"></div>
+                        <div class="w-full md:w-5/12 hidden md:block"></div>
+                    </div>
+                </div>
+
+                <!-- High School -->
+                <div class="relative reveal">
+                    <div class="flex items-center justify-between md:justify-start md:flex-row-reverse">
+                        <div class="w-full md:w-5/12 pl-12 md:pl-0 md:pr-12">
+                            <div class="glass p-6 rounded-xl border border-gray-700 hover:border-accent/50 transition-all">
+                                <span class="text-accent font-mono text-sm">2022</span>
+                                <h3 class="text-xl font-bold mt-2 mb-2">Senior Secondary (XII)</h3>
+                                <p class="text-gray-400 text-sm mb-2">AJC Public School, Nagapattinam</p>
+                                <p class="text-gray-500 text-xs">CBSE Board with Computer Science specialization.</p>
+                            </div>
+                        </div>
+                        <div class="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full bg-accent border-4 border-dark shadow-[0_0_20px_rgba(255,0,110,0.5)]"></div>
+                        <div class="w-full md:w-5/12 pl-12 md:pl-12 hidden md:block"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 relative overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,217,255,0.05),transparent_70%)]"></div>
+        
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-12 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Let's <span class="gradient-text">Connect</span></h2>
+                <p class="text-gray-400">Open for internship opportunities and collaborations</p>
+            </div>
+
+            <div class="glass rounded-2xl p-8 md:p-12 border border-gray-700 reveal">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6">Contact Information</h3>
+                        <div class="space-y-4">
+                            <a href="tel:+916385699273" class="flex items-center gap-4 text-gray-300 hover:text-primary transition-colors group">
+                                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                                    <i class="fas fa-phone text-primary"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Phone</p>
+                                    <p class="font-medium">+91 63856 99273</p>
+                                </div>
+                            </a>
+                            
+                            <a href="mailto:fredrickaminto970@gmail.com" class="flex items-center gap-4 text-gray-300 hover:text-primary transition-colors group">
+                                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                                    <i class="fas fa-envelope text-primary"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Email</p>
+                                    <p class="font-medium">fredrickaminto970@gmail.com</p>
+                                </div>
+                            </a>
+                            
+                            <div class="flex items-center gap-4 text-gray-300">
+                                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                                    <i class="fas fa-map-marker-alt text-primary"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Location</p>
+                                    <p class="font-medium">Kumbakonam, Tamil Nadu</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-8">
+                            <p class="text-sm text-gray-500 mb-4">Follow me</p>
+                            <div class="flex gap-4">
+                                <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-dark transition-all">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-dark transition-all">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-dark transition-all">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form action="https://formspree.io/f/xzdvwray" method="POST" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Name</label>
+                            <input type="text" name="name" required class="w-full px-4 py-3 rounded-lg bg-dark border border-gray-700 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors" placeholder="Your name">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Email</label>
+                            <input type="email" name="email" required class="w-full px-4 py-3 rounded-lg bg-dark border border-gray-700 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors" placeholder="your@email.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Message</label>
+                            <textarea name="message" rows="4" required class="w-full px-4 py-3 rounded-lg bg-dark border border-gray-700 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors" placeholder="Your message..."></textarea>
+                        </div>
+                        <input type="hidden" name="_next" value="https://yourwebsite.com">
+                        <button type="submit" class="w-full py-3 rounded-lg bg-gradient-to-r from-primary to-secondary text-white font-semibold hover:shadow-[0_0_30px_rgba(0,217,255,0.3)] transition-all transform hover:scale-[1.02]">
+                            Send Message
+                        </button>
+                    </form>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Name</label>
+                            <input type="text" class="w-full px-4 py-3 rounded-lg bg-dark border border-gray-700 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors" placeholder="Your name">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Email</label>
+                            <input type="email" class="w-full px-4 py-3 rounded-lg bg-dark border border-gray-700 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors" placeholder="your@email.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Message</label>
+                            <textarea rows="4" class="w-full px-4 py-3 rounded-lg bg-dark border border-gray-700 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors" placeholder="Your message..."></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-3 rounded-lg bg-gradient-to-r from-primary to-secondary text-white font-semibold hover:shadow-[0_0_30px_rgba(0,217,255,0.3)] transition-all transform hover:scale-[1.02]">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-gray-800 bg-darker">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-gray-500 text-sm">
+                © 2024 Fredrick BV Aminto. All rights reserved.
+            </p>
+            <p class="text-gray-600 text-sm font-mono">
+                Built with <i class="fas fa-heart text-accent mx-1"></i> and Data
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Typing Effect
+        const texts = ['Data Scientist', 'AI Enthusiast', 'Python Developer', 'Problem Solver'];
+        let textIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typingElement = document.getElementById('typing-text');
+
+        function type() {
+            const currentText = texts[textIndex];
+            
+            if (isDeleting) {
+                typingElement.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingElement.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            if (!isDeleting && charIndex === currentText.length) {
+                isDeleting = true;
+                setTimeout(type, 2000);
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                textIndex = (textIndex + 1) % texts.length;
+                setTimeout(type, 500);
+            } else {
+                setTimeout(type, isDeleting ? 50 : 100);
+            }
+        }
+
+        type();
+
+        // Particle Canvas Animation
+        const canvas = document.getElementById('hero-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2;
+            }
+            
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+            
+            draw() {
+                ctx.fillStyle = 'rgba(0, 217, 255, 0.5)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        for (let i = 0; i < 50; i++) {
+            particles.push(new Particle());
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach((particle, i) => {
+                particle.update();
+                particle.draw();
+                
+                particles.forEach((other, j) => {
+                    if (i === j) return;
+                    const dx = particle.x - other.x;
+                    const dy = particle.y - other.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 150) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(0, 217, 255, ${0.1 * (1 - distance/150)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(particle.x, particle.y);
+                        ctx.lineTo(other.x, other.y);
+                        ctx.stroke();
+                    }
+                });
+            });
+            
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+
+        // Custom Cursor
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX - 10 + 'px';
+            cursor.style.top = e.clientY - 10 + 'px';
+        });
+
+        document.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'scale(2)';
+                cursor.style.borderColor = '#7000ff';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'scale(1)';
+                cursor.style.borderColor = '#00d9ff';
+            });
+        });
+
+        // Scroll Reveal
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Mobile Menu
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Smooth Scroll for Navigation Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        // Navbar Background on Scroll
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-lg');
+                navbar.style.background = 'rgba(10, 10, 15, 0.95)';
+            } else {
+                navbar.classList.remove('shadow-lg');
+                navbar.style.background = 'rgba(21, 21, 32, 0.7)';
+            }
+        });
+
+        // Skill Bars Animation
+        const skillObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const bars = entry.target.querySelectorAll('.bg-gradient-to-r');
+                    bars.forEach((bar, index) => {
+                        setTimeout(() => {
+                            bar.style.width = bar.style.width;
+                        }, index * 100);
+                    });
+                }
+            });
+        });
+
+        document.querySelectorAll('.skill-item').forEach(el => skillObserver.observe(el));
+    </script>
+</body>
+</html>
