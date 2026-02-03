@@ -1,3 +1,5 @@
+🔗 Live CV: https://fredrickaminto.github.io/About-me/FredrickCV.html
+
 # 👋 Hi, I’m Fredrick Aminto
 
 Welcome to my GitHub profile portfolio!  
